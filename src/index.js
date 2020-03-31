@@ -19,8 +19,17 @@ io.on('connection', (socket) => {
 
     socket.emit('message', msg)
 
+    // show to everyone but the user comming from
+    socket.broadcast.emit("message", "a new user has joined")
+
     socket.on('sendMsg', (msg) => {
+        // sends it to everyone
         io.emit('message', msg)
+    })
+
+    // for when user disconects
+    socket.on('disconnect', () => {
+        io.emit('message', 'a user has left')
     })
 })
 

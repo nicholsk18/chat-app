@@ -3,6 +3,7 @@ const http = require('http')
 const express = require('express')
 const socketio = require('socket.io')
 const Filter = require('bad-words')
+const { generateMessage } = require('./utils/messages')
 
 const app = express()
 const server = http.createServer(app)
@@ -13,15 +14,14 @@ const publicDirectoryPath = path.join(__dirname, '../public')
 
 app.use(express.static(publicDirectoryPath))
 
-const msg = "Welcome"
 
 io.on('connection', (socket) => {
     console.log('New WebSocket connection')
 
-    socket.emit('message', msg)
+    socket.emit('message', generateMessage('Welcome'))
 
     // show to everyone but the user comming from
-    socket.broadcast.emit("message", "a new user has joined")
+    socket.broadcast.emit("message", generateMessage('a new user has joined'))
 
     socket.on('sendMsg', (msg, callback) => {
         const filter = new Filter()
@@ -31,7 +31,7 @@ io.on('connection', (socket) => {
         }
 
         // sends it to everyone
-        io.emit('message', msg)
+        io.emit('message', generateMessage(msg))
         callback()
     })
 
@@ -41,9 +41,9 @@ io.on('connection', (socket) => {
         callback()
     })
 
-    // for when user disconects
+    // for when user disconects send to all
     socket.on('disconnect', () => {
-        io.emit('message', 'a user has left')
+        io.emit('message', generateMessage('a user has left'))
     })
 })
 

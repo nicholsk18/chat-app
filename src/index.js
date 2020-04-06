@@ -18,10 +18,17 @@ app.use(express.static(publicDirectoryPath))
 io.on('connection', (socket) => {
     console.log('New WebSocket connection')
 
-    socket.emit('message', generateMessage('Welcome'))
+    // connect room
+    socket.on('join', ({ username, room }) => {
+        socket.join(room)
 
-    // show to everyone but the user comming from
-    socket.broadcast.emit("message", generateMessage('a new user has joined'))
+        socket.emit('message', generateMessage('Welcome'))
+        // socket.broadcast.to.emit -> send to everyone but to specific client and only to specific room
+        socket.broadcast.to(room).emit("message", generateMessage(`${username} has joined!`))
+
+        // io.to.emit -> emits event to everyone in specific room
+
+    })
 
     socket.on('sendMsg', (msg, callback) => {
         const filter = new Filter()
@@ -31,7 +38,7 @@ io.on('connection', (socket) => {
         }
 
         // sends it to everyone
-        io.emit('message', generateMessage(msg))
+        io.to('Center City').emit('message', generateMessage(msg))
         callback()
     })
 

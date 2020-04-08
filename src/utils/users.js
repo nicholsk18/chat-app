@@ -1,13 +1,13 @@
 // replace this with a database
 const users = []
 
-const addUser = ({ id, userName, room }) => {
+const addUser = ({ id, username, room }) => {
     // Clean the data
-    userName = userName.trim().toLowerCase()
+    username = username.trim().toLowerCase()
     room = room.trim().toLowerCase()
     
     // Validate the data
-    if(!userName || !room) {
+    if(!username || !room) {
         return {
             error: 'Username and room are required!'
         }
@@ -15,7 +15,7 @@ const addUser = ({ id, userName, room }) => {
 
     // Check for existing user
     const existingUser = users.find((user) => {
-        return user.room == room && user.userName === userName
+        return user.room == room && user.username === username
     })
 
     // Validate username
@@ -26,7 +26,7 @@ const addUser = ({ id, userName, room }) => {
     }
 
     // Store user
-    const user = { id, userName, room }
+    const user = { id, username, room }
     users.push(user)
     return { user }
 }

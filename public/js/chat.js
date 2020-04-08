@@ -84,4 +84,6 @@ $sendLocationButton.addEventListener('click', () => {
 })
 
 // send chatroom to the server
-socket.emit('join', { username, room })
+socket.emit('join', { username, room }, (error) =>{
+
+})

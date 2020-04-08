@@ -85,5 +85,8 @@ $sendLocationButton.addEventListener('click', () => {
 
 // send chatroom to the server
 socket.emit('join', { username, room }, (error) =>{
-
+    if(error){
+        alert(error)
+        location.href = '/'
+    }
 })

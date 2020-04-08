@@ -29,9 +29,9 @@ io.on('connection', (socket) => {
 
         socket.join(user.room)
 
-        socket.emit('message', generateMessage('Welcome'))
+        socket.emit('message', generateMessage('Admin', 'Welcome'))
         // socket.broadcast.to.emit -> send to everyone but to specific client and only to specific room
-        socket.broadcast.to(user.room).emit("message", generateMessage(`${user.username} has joined!`))
+        socket.broadcast.to(user.room).emit("message", generateMessage('Admin', `${user.username} has joined!`))
 
         callback()
 
@@ -40,6 +40,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('sendMsg', (msg, callback) => {
+        const user = getUser(socket.id);
         const filter = new Filter()
         
         if(filter.isProfane(msg)){
@@ -47,13 +48,14 @@ io.on('connection', (socket) => {
         }
 
         // sends it to everyone
-        io.to('Center City').emit('message', generateMessage(msg))
+        io.to(user.room).emit('message', generateMessage(user.username, msg))
         callback()
     })
 
     // sends location to users
     socket.on('sendLocation', (cords, callback) => {
-        io.emit('locationMessage', generateLocationMessage(`https://google.com/maps?q=${cords.latitude},${cords.longitude}`))
+        const user = getUser(socket.id)
+        io.to(user.room).emit('locationMessage', generateLocationMessage(user.username, `https://google.com/maps?q=${cords.latitude},${cords.longitude}`))
         callback()
     })
 
@@ -62,7 +64,7 @@ io.on('connection', (socket) => {
         const user = removeUser(socket.id)
 
         if(user) {
-            io.to(user.room).emit('message', generateMessage(`${user.username} has left!`))
+            io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`))
         }
 
     })

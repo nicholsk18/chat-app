@@ -32,6 +32,12 @@ io.on('connection', (socket) => {
         socket.emit('message', generateMessage('Admin', 'Welcome'))
         // socket.broadcast.to.emit -> send to everyone but to specific client and only to specific room
         socket.broadcast.to(user.room).emit("message", generateMessage('Admin', `${user.username} has joined!`))
+        
+        io.to(user.room).emit('roomData', {
+            room: user.room,
+            users: getUsersInRoom(user.room)
+        })
+
 
         callback()
 
@@ -65,6 +71,10 @@ io.on('connection', (socket) => {
 
         if(user) {
             io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`))
+            io.to(user.room).emit('roomData', {
+                room: user.room,
+                users: getUsersInRoom(user.room)
+            })
         }
 
     })

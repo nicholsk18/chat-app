@@ -82,6 +82,16 @@ button:disabled {
     margin-bottom: 16px;
     width: 100%;
 }
+.login {
+    font-size: 0.8rem;
+    padding-top: 5px;
+    text-align: center;
+}
+.login a {
+    color: #6b47b8;
+}
+
+/* Login Page */
 
 /* Chat Page Layout */
 

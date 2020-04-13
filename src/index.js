@@ -3,10 +3,16 @@ const http = require('http')
 const express = require('express')
 const socketio = require('socket.io')
 const Filter = require('bad-words')
+const userRouter = require('./routers/user')
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
 
 const app = express()
+
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
+app.use(userRouter)
+
 const server = http.createServer(app)
 const io = socketio(server)
 

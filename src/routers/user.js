@@ -4,6 +4,7 @@ const router = new express.Router()
 
 router.post('/users',  async (req, res) => {
     console.log(req.body)
+    
     res.redirect('chat.html')
 })
 
